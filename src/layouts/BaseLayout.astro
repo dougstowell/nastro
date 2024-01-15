@@ -1,9 +1,11 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import '../styles/global.css';
 
 const { pageTitle } = Astro.props;
+
+const year = new Date().getFullYear();
 ---
 
 <html lang="en">
@@ -13,17 +15,16 @@ const { pageTitle } = Astro.props;
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>{pageTitle}</title>
+        <ViewTransitions />
     </head>
     <body>
         <Header />
-        <h1>{pageTitle}</h1>
-        <slot />
-        <Footer />
-
-        <script>
-            document.querySelector('.hamburger').addEventListener('click', () => {
-              document.querySelector('.nav-links').classList.toggle('expanded');
-            });
-        </script>
+        <div class="container mx-auto">
+            <h1 transition:animate="slide" class="text-5xl my-4">{pageTitle}</h1>
+            <slot />
+        </div>
+        <Footer>
+            <span class="text-bold text-white">{year}</span>
+        </Footer>
     </body>
 </html>

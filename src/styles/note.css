@@ -1,0 +1,40 @@
+/* Styles to be applied to the note layout screens. */
+
+#note-content-container h2 {
+    font-size: 2rem;
+}
+
+#note-content-container h3 {
+    font-size: 1.5rem;
+}
+
+#note-content-container p, pre {
+    margin-bottom: 1rem;
+}
+
+#note-content-container pre {
+    padding: 1rem;
+}
+
+#note-content-container blockquote {
+    padding: 1rem;
+    background-color: #d7ecfa;
+    border-left: 0.25rem solid;
+    border-left-color: #1779ba;
+    margin-bottom: 1rem;
+}
+
+#note-content-container ol {
+    list-style-type:square;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+#note-content-container a {
+    background-color: yellow;
+    color: teal;
+}
+
+#note-content-container a:hover {
+    text-decoration: underline;
+}

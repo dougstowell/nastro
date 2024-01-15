@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import TagList from './TagList.astro';
+
+const { article } = Astro.props;
+
+const meta = article.data
+
+const pubDateVal = meta.pubDate;
+const pubDate = pubDateVal instanceof Date ? pubDateVal.toString().slice(0, 10) : pubDateVal.slice(0, 10);
+
+const url = article.url || `/note/${article.slug}`;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif}')
+
+if (!images[meta.image.url]) throw new Error(`"${meta.image.url}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
+if (!images[meta.authorAvatar]) throw new Error(`"${meta.authorAvatar}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
+---
+<div class="w-96 mx-auto mt-10">
+    <div class="bg-white rounded-lg overflow-hidden shadow-lg">
+        <a href={url}>
+            <Image
+                src={images[meta.image.url]()}
+                alt={meta.image.alt}
+                class="mx-auto object-cover hover:opacity-75 transition duration-300 ease-in-out" />
+        </a>
+        <div class="p-6">
+            <h2 class="text-2xl font-semibold mb-2">
+                <a href={url}>{meta.title}</a>
+            </h2>
+            <div class="flex items-center mb-4">
+                <Image
+                    src={images[meta.authorAvatar]()}
+                    alt="Avatar of author"
+                    class="w-10 h-10 rounded-full mr-4" />
+                <div class="text-sm">
+                  <p class="text-gray-900 leading-none">{meta.author}</p>
+                  <p class="text-gray-600">{pubDate}</p>
+                </div>
+            </div>
+            <TagList tags={meta.tags} />
+        </div>
+    </div>
+</div>

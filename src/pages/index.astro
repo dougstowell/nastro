@@ -1,12 +1,18 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Greeting from '../components/Greeting.jsx';
+import { getCollection } from "astro:content";
 
-const pageTitle = 'Home Page';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NoteList from "../components/NoteList.astro";
+
+const pageTitle = 'Nastro';
+
+const allNotes = (await getCollection('note')).sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
+
+const latestNotes = allNotes.slice(0, 3);
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <h2>My awesome blog subtitle</h2>
-    <Greeting messages={["Hi", "Hello", "Howdy", "Hey there"]} />
-    <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
+    <h2 class="text-2xl mt-2">Latest Notes</h2>
+
+    <NoteList notes={latestNotes} />
 </BaseLayout>

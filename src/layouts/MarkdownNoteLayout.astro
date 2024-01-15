@@ -1,0 +1,51 @@
+---
+import { getCollection } from "astro:content";
+import { fade } from "astro:transitions";
+
+import BaseLayout from './BaseLayout.astro';
+import TagList from '../components/TagList.astro';
+
+import '../styles/note.css';
+
+const { entry } = Astro.props;
+
+const pubDate = entry.data.pubDate.toString().slice(0, 10);
+
+const allNotes = (await getCollection('note')).sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
+
+const currentIdx = allNotes.findIndex(item => item.slug === entry.slug);
+
+const prevSlug = currentIdx > 0 ? allNotes[currentIdx - 1].slug : '';
+const nextSlug = currentIdx < allNotes.length - 1 ? allNotes[currentIdx + 1].slug : '';
+
+const prevTitle = currentIdx > 0 ? allNotes[currentIdx - 1].data.title: '';
+const nextTitle = currentIdx < allNotes.length - 1 ? allNotes[currentIdx + 1].data.title : '';
+
+const defaultClass = 'inline-block bg-teal-500 hover:bg-teal-400 text-teal-200 hover:text-white px-4 py-2 ml-4 rounded';
+const defaultClassDisabled = defaultClass + ' pointer-events-none';
+---
+
+<BaseLayout pageTitle={entry.data.title}>
+    <p>Published on: {pubDate}</p>
+    <p transition:animate={fade({ duration: '2s' })}><em>{entry.data.description}</em></p>
+    <p class="mb-4">Written by {entry.data.author}</p>
+
+    <div class="flex flex-row flex-wrap">
+        <aside class="w-full sm:w-1/3 md:w-1/4">
+            <div class="sticky top-0 w-full">
+                <img src={entry.data.image.url} alt={entry.data.image.alt} />
+                <div class="inline-flex mt-4 float-right">
+                    <a href={`/note/${prevSlug}`} class={prevSlug ? defaultClass : defaultClassDisabled} title={prevTitle}>Prev</a>
+                    <a href="/note" class={defaultClass}>Note Home</a>
+                    <a href={`/note/${nextSlug}`} class={nextSlug ? defaultClass : defaultClassDisabled} title={nextTitle}>Next</a>
+                </div>
+            </div>
+        </aside>
+        <main role="main" class="w-full sm:w-2/3 md:w-3/4 pl-6">
+            <TagList tags={entry.data.tags} />
+            <div id="note-content-container">
+                <slot />
+            </div>
+        </main>
+    </div>
+</BaseLayout>

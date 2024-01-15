@@ -1,59 +1,33 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-import '../styles/global.css';
+// Rudimentary example of fetching external data.
+const response = await fetch('https://randomuser.me/api/?results=10');
+const data = await response.json();
+const users = data.results.map((user) => {
+    return {
+        name: user.name.first + ' ' + user.name.last,
+        email: user.email,
+        thumbnail: user.picture.thumbnail,
+    }
+});
 
-const pageTitle = "About Me";
-
-const identity = {
-    firstName: "Sarah",
-    country: "Canada",
-    occupation: "Technical Writer",
-    hobbies: ["photography", "birdwatching", "baseball"],
-};
-
-const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
-
-const happy = true;
-const finished = true;
-const goal = 3;
-
-const skillColor = "navy";
-const fontWeight = "bold";
-const textCase = "uppercase";
+const pageTitle = 'About';
 ---
 
-<style define:vars={{skillColor, fontWeight, textCase}}>
-    .skill {
-        color: var(--skillColor);
-        font-weight: var(--fontWeight);
-        text-transform: var(--textCase);
-    }
-</style>
-
 <BaseLayout pageTitle={pageTitle}>
-    <h2>... and my new Astro site!</h2>
-
-    <p>I am working through Astro's introductory tutorial. This is the second page on my website, and it's the first one I built myself!</p>
-
-    <p>This site will update as I complete more of the tutorial, so keep checking back and see how my journey is going!</p>
-
-    <p>Here are a few facts about me:</p>
-    <ul>
-        <li>My name is {identity.firstName}.</li>
-        <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
-        {identity.hobbies.length >= 2 &&
-          <li>Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}</li>
-        }
-    </ul>
-    <p>My skills are:</p>
-    <ul>
-        {skills.map((skill) => <li class="skill">{skill}</li>)}
+    <p class="mb-2">Site to illustrate some of the core introductory concepts in Static Site Generation using Astro 🚀</p>
+    <ul class="mb-6">
+        <li><a href="https://astro.build/">https://astro.build/</a></li>
+        <li><a href="https://docs.astro.build/">https://docs.astro.build/</a></li>
+        <li><a href="https://astro.build/themes/">https://astro.build/themes/</a></li>
+        <li><a href="https://astro.new/">https://astro.new/</a></li>
     </ul>
 
-    {happy && <p>I am happy to be learning Astro!</p>}
-
-    {finished && <p>I finished this tutorial!</p>}
-
-    {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
+    <p class="mb-2">🚀 Astro Lovers 🚀</p>
+    <ul>
+        {users.map(user => (
+            <li><img class="w-10 h-10 rounded-full mr-4 mb-2 inline" src={user.thumbnail} alt="Avatar of Astro Lover"><span>{user.name} ({user.email})</span></li>
+        ))}
+    </ul>
 </BaseLayout>

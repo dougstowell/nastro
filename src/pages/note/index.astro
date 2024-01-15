@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SearchForm from "../../components/SearchForm.astro";
+import NoteList from "../../components/NoteList.astro";
+
+const pageTitle = 'Notes';
+
+const allNotes = await getCollection('note');
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <div class="m-auto mx-80">
+        <SearchForm />
+    </div>
+
+    <NoteList notes={allNotes} />
+</BaseLayout>
